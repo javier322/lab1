@@ -2,7 +2,7 @@
 # include <stdlib.h>
 
 int ***generarMatriz(int *cursor, int *final ,int *numF,int *numC,char nombre[]);
-
+int comparar(int *m,int *m2);
 
 int main(){
 	
@@ -10,7 +10,7 @@ int main(){
 	int cursor;
 	int final;
 	int nf,nc,np;
-	int numFp-,
+	int numFp;
 	int numCp;
 	
 	int ***imagen;
@@ -24,7 +24,7 @@ int main(){
 	final=0;
 	
 	imagen = generarMatriz(&cursor,&final,&numF,&numC,nombre);
-	numFp=numf;
+	numFp=numF;
 	numCp=numC;
 	cursor =0;
 	final=0;
@@ -49,7 +49,8 @@ int main(){
 			printf("\n");
 		}
 		printf("\n-------------------------\n");
-		comparar(imagen,imagenB); 
+		
+		comparar(imagen[0][0],imagenB[0][0]); 
 		
 		
 		free(imagenB);
@@ -58,6 +59,13 @@ int main(){
 	return 0;
 }
 
+int comparar(int m[3],int m2[3]){
+	int i;
+	for(i=0;i<3;i++){
+		printf("%i y %i \n",m[i],m2[i]);
+	}
+	return 0;
+}
 
 int ***generarMatriz(int *cursor,int *final, int *numF, int *numC,char nombre[]){
 	
