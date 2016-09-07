@@ -2,7 +2,8 @@
 # include <stdlib.h>
 
 int ***generarMatriz(int *cursor, int *final ,int *numF,int *numC,char nombre[]);
-int comparar(int *m,int *m2);
+int encontrarImagen(int ***m1, int ***m2,int numF,int numF2,int numC,int numC2);
+int comparar(int m[3],int m2[3]);
 
 int main(){
 	
@@ -38,7 +39,7 @@ int main(){
 			break;
 		}
 		
-		for(nf=0;nf<numF;nf++){
+	/*	for(nf=0;nf<numF;nf++){
 			for(nc=0;nc<numC;nc++){
 				for(np=0;np<3;np++){
 					printf("%i,",imagenB[nf][nc][np]);
@@ -47,10 +48,10 @@ int main(){
 		
 			}
 			printf("\n");
-		}
-		printf("\n-------------------------\n");
+		}*/
+		//printf("\n-------------------------\n");
+		encontrarImagen(imagen,imagenB,numFp,numF,numCp,numC);
 		
-		comparar(imagen[0][0],imagenB[0][0]); 
 		
 		
 		free(imagenB);
@@ -59,13 +60,19 @@ int main(){
 	return 0;
 }
 
-int comparar(int m[3],int m2[3]){
-	int i;
-	for(i=0;i<3;i++){
-		printf("%i y %i \n",m[i],m2[i]);
-	}
-	return 0;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 int ***generarMatriz(int *cursor,int *final, int *numF, int *numC,char nombre[]){
 	
@@ -240,7 +247,7 @@ int ***generarMatriz(int *cursor,int *final, int *numF, int *numC,char nombre[])
 		i++;
 	}
 	
-	for(nf=0;nf<numFilas;nf++){
+/*	for(nf=0;nf<numFilas;nf++){
 		for(nc=0;nc<numColumnas;nc++){
 			for(np=0;np<3;np++){
 				printf("%i,",m[nf][nc][np]);
@@ -249,7 +256,7 @@ int ***generarMatriz(int *cursor,int *final, int *numF, int *numC,char nombre[])
 		
 		}
 		printf("\n");
-	}
+	}*/
 	
 	
 	*numF=numFilas;
@@ -257,4 +264,97 @@ int ***generarMatriz(int *cursor,int *final, int *numF, int *numC,char nombre[])
 	
 	return m;
 	
+}
+
+
+int encontrarImagen(int ***m1, int ***m2,int numF,int numF2,int numC,int numC2){
+
+	int cursor[2];
+	int nf,nc;
+	int nf2,nc2;
+	int comparacion;
+	
+	nf=0;
+	nc=0;
+	nf2=0;
+	nc2=0;
+	cursor[0]=0;
+	cursor[1]=0;
+	comparacion=0;
+
+	while(nf<numF){
+		
+		comparacion=comparar(m1[nf][nc],m2[nf2][nc2]);
+	
+		if( comparacion==1){
+			
+			cursor[0]=nf;
+			cursor[1]=nc;
+			nc++;
+			
+			while(comparacion==1){
+			
+				nc2++;
+				
+				if(nc2>=numC2){
+					nf++;
+					nc=cursor[1];
+					nf2++;
+					nc2=0;
+					
+				}
+				if(nf2>=numF2){
+				
+					printf("\n Imagen encontrada");
+					return 1;
+				}
+				
+				if(nc>=numC){
+					nf++;
+					nc=cursor[1];
+				}
+				if(nf>=numF){
+					break;
+				}
+				comparacion=comparar(m1[nf][nc],m2[nf2][nc2]);
+				nc++;
+			}
+			
+			nf=cursor[0];
+			nc=cursor[1]+1;
+			nc2=0;
+			nf2=0;
+			if(nc>=numC){
+				nf++;
+				nc=0;
+			}
+		}
+		
+		else{
+			nc++;
+			if(nc>=numC){
+				nf++;
+				nc=0;
+			}	
+		}
+	}
+		printf("\n no se encuentra la imagen");
+		return 0;
+}
+	
+	
+	
+	
+	
+	
+int comparar(int m[3],int m2[3]){
+
+	int i;
+	for(i=0;i<3;i++){
+	
+		if(m[i]!=m2[i]){
+			return 0;
+		}
+	}
+	return 1;
 }
