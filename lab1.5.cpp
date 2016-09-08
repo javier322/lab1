@@ -4,9 +4,10 @@
 # include <stdlib.h>
 
 int ***generarMatriz(int *cursor, int *final ,int *numF,int *numC,char nombre[]);
+int buscarImagen(int ***m1,int ***m2,int numF,int numF2,int numC,int numC2);
 int encontrarImagen(int ***m1, int ***m2,int numF,int numF2,int numC,int numC2);
 int comparar(int m[3],int m2[3]);
-int ***voltearImagen(int ***m,int fila,int columnas);
+int ***voltearImagen(int ***m,int *fila,int *columnas);
 int main(){
 	
 
@@ -52,38 +53,13 @@ int main(){
 			printf("\n");
 		}*/
 		//printf("\n-------------------------\n");
-		encontrarImagen(imagen,imagenB,numFp,numF,numCp,numC);
-		imagenB=voltearImagen(imagenB,numF,numC);
-		
-		for(nf=0;nf<numF;nf++){
-			for(nc=0;nc<numC;nc++){
-				for(np=0;np<3;np++){
-					printf("%i,",imagenB[nf][nc][np]);
-				}
-				printf(" ");
-		
-			}
-			printf("\n");
-		}
-		
-		
+		buscarImagen(imagen,imagenB,numFp,numF,numCp,numC);
 		
 		free(imagenB);
 		
 	}
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -280,6 +256,42 @@ int ***generarMatriz(int *cursor,int *final, int *numF, int *numC,char nombre[])
 	
 }
 
+int buscarImagen(int ***m1,int ***m2,int numF,int numF2,int numC,int numC2){
+	
+	int busqueda;
+	int i;
+	
+	i=0;
+	busqueda=encontrarImagen(m1,m2,numF,numF2,numC,numC2);
+	
+	while(i<3){
+		if(busqueda==1){
+			return 1;
+			
+		}
+		m2=voltearImagen(m2,&numF2,&numC2);
+		
+		busqueda=encontrarImagen(m1,m2,numF,numF2,numC,numC2);
+		i++;
+		
+	}
+	return 0;
+	
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 int encontrarImagen(int ***m1, int ***m2,int numF,int numF2,int numC,int numC2){
 
@@ -319,7 +331,7 @@ int encontrarImagen(int ***m1, int ***m2,int numF,int numF2,int numC,int numC2){
 				}
 				if(nf2>=numF2){
 				
-					printf("\n Imagen encontrada");
+					printf("\n Imagen encontrada\n");
 					return 1;
 				}
 				
@@ -352,7 +364,7 @@ int encontrarImagen(int ***m1, int ***m2,int numF,int numF2,int numC,int numC2){
 			}	
 		}
 	}
-		printf("\n no se encuentra la imagen");
+		printf("\n no se encuentra la imagen\n");
 		return 0;
 }
 	
@@ -373,21 +385,22 @@ int comparar(int m[3],int m2[3]){
 	return 1;
 }
 
-int ***voltearImagen(int ***imagen,int filas,int columnas){
+int ***voltearImagen(int ***imagen,int *filas,int *columnas){
 	int ***m;
 	int nf,nc,np;
 	int nf2,nc2;
+	int aux;
 	
-	printf("\n entre aqui \n");
 	
-	m=(int***)malloc(columnas*sizeof(int**));
+	
+	m=(int***)malloc(*columnas*sizeof(int**));
 	if(m==NULL){
 		printf("No se pudo reservar espacion en la memoria");
 		exit(1);
 	}
 	
-	for(nf=0;nf<columnas;nf++){
-		m[nf]=(int**)malloc(filas*sizeof(int*));
+	for(nf=0;nf<*columnas;nf++){
+		m[nf]=(int**)malloc(*filas*sizeof(int*));
 		if(m[nf]==NULL){
 			printf("No se pudo reservar espacio en la memoria");
 			exit(1);	
@@ -396,8 +409,8 @@ int ***voltearImagen(int ***imagen,int filas,int columnas){
 	}
 
 	
-	for(nf=0;nf<columnas;nf++){
-		for(nc=0;nc<filas;nc++){
+	for(nf=0;nf<*columnas;nf++){
+		for(nc=0;nc<*filas;nc++){
 			m[nf][nc]=(int*)malloc(3*sizeof(int));
 			if(m[nf][nc]==NULL){
 				printf("No se pudo reservar espacio en la memoria");
@@ -405,15 +418,15 @@ int ***voltearImagen(int ***imagen,int filas,int columnas){
 			}	
 		}
 	}
-	printf("\n entre aqui \n");
+
 	
 	nf=0;
 	nc=0;
 	nf2=0;
-	nc2=columnas;	
+	nc2=*columnas;	
 	
 	while (nc2!=0){
-		if(nf2>=filas){
+		if(nf2>=*filas){
 			nc2--;
 			nf++;
 			nf2=0;
@@ -426,8 +439,8 @@ int ***voltearImagen(int ***imagen,int filas,int columnas){
 		nc++;
 		nf2++;
 	}
-	for(nf=0;nf<columnas;nf++){
-		for(nc=0;nc<filas;nc++){
+	for(nf=0;nf<*columnas;nf++){
+		for(nc=0;nc<*filas;nc++){
 			for(np=0;np<3;np++){
 				printf("%i,",m[nf][nc][np]);
 			}
@@ -436,5 +449,8 @@ int ***voltearImagen(int ***imagen,int filas,int columnas){
 		}
 		printf("\n");
 	}
+	aux=*columnas;
+	*columnas=*filas;
+	*filas=aux;
 	return m;
 }
